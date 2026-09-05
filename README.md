@@ -268,8 +268,8 @@ mory/
 | Name | Role | Key Responsibilities |
 |---|---|---|
 | **Sanzy Lee** | Product Lead & UI/UX | User experience design, elderly-centred interface, PDF mockups, user flow |
-| **Ten Jing Yi** | Full-Stack Developer | Server architecture, Gonka Router integration, API endpoints, patch system |
-| **Joey Teo** | AI & Feature Integration | AI companion prompting, medicine scanner, fact-checker, multi-model consensus logic |
+| **Ten Jing Yi** | Full-Stack Developer | Server architecture, Gonka Router integration, API endpoints, patch system, multi-model consensus logic |
+| **Joey Teo** | Business Lead & Feature Integration | Focuses on the market, monetization, target audience and fact-checker |
 
 ---
 
