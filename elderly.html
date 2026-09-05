@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MORY - Senior Companion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="elderly-style.css">
+</head>
+<body class="elderly-font-size">
+
+    <nav class="top-bar">
+        <a href="/" class="top-back-group">
+            <span class="top-avatar-badge">👵</span>
+            <span class="pill-btn" data-i18n="back">BACK ◄</span>
+        </a>
+        <button class="hamburger-btn" onclick="toggleSettingsPanel()" aria-label="Settings">☰</button>
+    </nav>
+
+    <div id="settings-panel" class="settings-panel">
+        <h3 data-i18n="settingsTitle">Settings</h3>
+        <div class="settings-row">
+            <span data-i18n="textSize">Text Size</span>
+            <div class="font-controls">
+                <button class="font-btn" onclick="adjustFont(-2)">A-</button>
+                <button class="font-btn" onclick="resetFont()">A</button>
+                <button class="font-btn" onclick="adjustFont(2)">A+</button>
+            </div>
+        </div>
+        <div class="settings-row" style="flex-direction:column;align-items:flex-start;">
+            <label for="dialect-picker"><strong data-i18n="dialectLabel">🗣️ Speaking Language / Dialect</strong></label>
+            <select id="dialect-picker" class="dialect-select" onchange="applyUiTranslations()">
+                <option value="cantonese">廣東話 (Cantonese)</option>
+                <option value="hokkien">福建話 (Hokkien)</option>
+                <option value="hakka">客家話 (Hakka)</option>
+                <option value="mandarin">华语 (Mandarin)</option>
+                <option value="english" selected>English</option>
+                <option value="bm">Bahasa Melayu</option>
+            </select>
+        </div>
+        <div class="settings-row">
+            <span class="gonka-badge">
+                <span class="status-dot" id="status-dot"></span>
+                <span data-i18n="gonkaLabel">Gonka:</span> <span id="gonka-node">Connecting...</span>
+            </span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+            <button onclick="testServerConnection()" class="pill-btn-outline" data-i18n="testConnection">🔌 Test</button>
+            <button onclick="sendQuickReply()" class="pill-btn-outline" data-i18n="quickTest">💬 Quick Test</button>
+        </div>
+        <button class="pill-btn" style="margin-top:16px;width:100%;" onclick="toggleSettingsPanel()" data-i18n="close">Close</button>
+    </div>
+
+    <main class="elderly-container">
+        <h1 class="good-day-heading" data-i18n="goodDay">Good Day!</h1>
+        <section class="icon-grid">
+
+            <div class="icon-grid-card" onclick="openScanMedicationLanding()">
+                <div class="icon-grid-badge bg-scan">
+                    <img src="icon-scan.png" alt="Scan Medication" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                    <span class="icon-fallback">📷</span>
+                </div>
+                <span data-i18n="cardScan">Scan Medication</span>
+            </div>
+
+            <div class="icon-grid-card" onclick="openPillsChecklist()">
+                <div class="icon-grid-badge bg-pill" style="position:relative;">
+                    <img src="icon-pills.png" alt="My Pills" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                    <span class="icon-fallback">💊</span>
+                    <span id="pills-due-badge" class="due-badge"></span>
+                </div>
+                <span data-i18n="cardPills">My Pills</span>
+            </div>
+
+            <div class="icon-grid-card" onclick="openCallFamily()">
+                <div class="icon-grid-badge bg-call">
+                    <img src="icon-call.png" alt="Call" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                    <span class="icon-fallback">📞</span>
+                </div>
+                <span data-i18n="cardCall">Call</span>
+            </div>
+
+            <div class="icon-grid-card" onclick="openTalkToMoryScreen()">
+                <div class="icon-grid-badge bg-mory">
+                    <img src="mory-mascot.jpg" alt="Talk to MORY" style="width:70%;">
+                </div>
+                <span data-i18n="cardTalk">Talk to MORY</span>
+            </div>
+
+            <div class="icon-grid-card" onclick="openAlertScreen()">
+                <div class="icon-grid-badge bg-alert">
+                    <img src="icon-alert.png" alt="Alert" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                    <span class="icon-fallback">🚨</span>
+                </div>
+                <span data-i18n="cardAlert">Alert</span>
+            </div>
+
+            <div class="icon-grid-card" onclick="openBrainGamesMenu()">
+                <div class="icon-grid-badge bg-game">
+                    <img src="icon-games.png" alt="Games" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                    <span class="icon-fallback">🎮</span>
+                </div>
+                <span data-i18n="cardGames">Games</span>
+            </div>
+
+        </section>
+    </main>
+
+    <!--
+        Medicine photo input — uses position:absolute/opacity:0 instead of display:none
+        so that <label for="medicine-photo-input"> in the modal works on iOS Safari.
+    -->
+    <input type="file"
+           id="medicine-photo-input"
+           accept="image/*"
+           capture="environment"
+           style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;top:0;left:0;"
+           onchange="handleMedicinePhotoSelected(event)">
+
+    <div id="elderly-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-back-group">
+                <img src="mory-mascot.jpg" alt="MORY" class="modal-mascot-badge">
+                <button class="pill-btn" onclick="closeElderlyModal()" data-i18n="back">BACK ◄</button>
+            </div>
+            <h2 id="modal-title">Notice</h2>
+            <div id="modal-body">Information...</div>
+        </div>
+    </div>
+
+    <script src="elderly-script.js"></script>
+    <!--
+        ui-redesign-patch.js overrides:
+          openPillsChecklist, openCallFamily, openAlertScreen, triggerInAppAlert,
+          sendToGonkaCompanion, openScanMedicationLanding, handleMedicinePhotoSelected,
+          renderMedicineResult
+        All changes match the PDF design mockups + competition requirements.
+    -->
+    <script src="ui-redesign-patch.js"></script>
+    <!-- games-ui-patch.js: overrides openBrainGamesMenu, finishGameSession,
+         openBrainGameProgress — card grid + colorful title matching PDF design -->
+    <script src="games-ui-patch.js"></script>
+    <!-- medicine-camera.js: live camera viewfinder + vision AI scan + image enhancement -->
+    <script src="medicine-camera.js"></script>
+</body>
+</html>

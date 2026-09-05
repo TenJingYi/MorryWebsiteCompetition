@@ -1,0 +1,106 @@
+{
+  "medications": [
+    {
+      "id": "seed-1",
+      "name": "Amlodipine",
+      "purpose": "Blood Pressure",
+      "dosage": "1 Tablet",
+      "time": "09:00"
+    },
+    {
+      "id": "seed-2",
+      "name": "Metformin",
+      "purpose": "Diabetes",
+      "dosage": "1 Tablet",
+      "time": "16:00"
+    },
+    {
+      "id": "med-mtfu3m9pry20",
+      "name": "Para",
+      "purpose": "",
+      "dosage": "1",
+      "time": "09:20"
+    },
+    {
+      "id": "med-mtn2ib2tutln",
+      "name": "PARACETAMOL SUSPENSION",
+      "purpose": "Paracetamol suspension is a liquid pain reliever and fever reducer used for headaches, toothaches, muscle aches, and fever.",
+      "dosage": "",
+      "time": "08:00"
+    }
+  ],
+  "history": [
+    {
+      "medicationId": "seed-2",
+      "medicationName": "Metformin",
+      "date": "2026-08-30",
+      "takenAt": "2026-08-30T13:16:38.323Z"
+    },
+    {
+      "medicationId": "seed-1",
+      "medicationName": "Amlodipine",
+      "date": "2026-08-30",
+      "takenAt": "2026-08-30T13:16:51.387Z"
+    },
+    {
+      "medicationId": "seed-1",
+      "medicationName": "Amlodipine",
+      "date": "2026-08-31",
+      "takenAt": "2026-08-31T04:28:00.963Z"
+    },
+    {
+      "medicationId": "med-mtfu3m9pry20",
+      "medicationName": "Para",
+      "date": "2026-08-31",
+      "takenAt": "2026-08-31T04:28:24.990Z"
+    },
+    {
+      "medicationId": "seed-2",
+      "medicationName": "Metformin",
+      "date": "2026-09-02",
+      "takenAt": "2026-09-02T11:16:28.871Z"
+    },
+    {
+      "medicationId": "med-mtfu3m9pry20",
+      "medicationName": "Para",
+      "date": "2026-09-02",
+      "takenAt": "2026-09-02T11:39:54.442Z"
+    },
+    {
+      "medicationId": "seed-1",
+      "medicationName": "Amlodipine",
+      "date": "2026-09-02",
+      "takenAt": "2026-09-02T11:47:52.772Z"
+    },
+    {
+      "medicationId": "seed-1",
+      "medicationName": "Amlodipine",
+      "date": "2026-09-03",
+      "takenAt": "2026-09-03T00:04:58.889Z"
+    },
+    {
+      "medicationId": "seed-1",
+      "medicationName": "Amlodipine",
+      "date": "2026-09-04",
+      "takenAt": "2026-09-04T13:03:52.182Z"
+    },
+    {
+      "medicationId": "med-mtn2ib2tutln",
+      "medicationName": "PARACETAMOL SUSPENSION",
+      "date": "2026-09-04",
+      "takenAt": "2026-09-04T14:51:34.793Z"
+    },
+    {
+      "medicationId": "med-mtfu3m9pry20",
+      "medicationName": "Para",
+      "date": "2026-09-04",
+      "takenAt": "2026-09-04T14:51:36.040Z"
+    },
+    {
+      "medicationId": "seed-2",
+      "medicationName": "Metformin",
+      "date": "2026-09-04",
+      "takenAt": "2026-09-04T14:51:36.763Z"
+    }
+  ]
+}

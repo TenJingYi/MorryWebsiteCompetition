@@ -1,0 +1,171 @@
+:root {
+    --bg-cream: #FFFDF9;
+    --purple-main: #6D3B97;
+    --purple-light: #F2E9F7;
+    --purple-deep: #4A2A68;
+    --lavender-card: #E8D9EE;
+    --sage-green: #3B5E43;
+    --sage-bg: #EAEFE9;
+    --text-dark: #221A28;
+    --white: #FFFFFF;
+    --gold: #F5C842;
+    --gold-dark: #D9A62A;
+    --warn: #C97A1E;
+    --danger: #E4574C;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Lexend', sans-serif;
+}
+
+body {
+    background-color: var(--bg-cream);
+    color: var(--text-dark);
+    line-height: 1.5;
+}
+
+.dash-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--bg-cream);
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dash-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    font-size: 1.1em;
+    color: var(--purple-main);
+}
+
+.dash-brand img { width: 40px; height: 40px; }
+
+.dash-logout-btn {
+    background: var(--gold);
+    color: var(--purple-deep);
+    border: none;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-weight: 800;
+    cursor: pointer;
+    font-size: 0.85em;
+}
+
+.dash-container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.dash-card {
+    background: var(--white);
+    border: 2px solid var(--lavender-card);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.dash-card h2 {
+    color: var(--purple-main);
+    font-size: 1.1em;
+    margin-bottom: 12px;
+}
+
+.dash-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.dash-row:last-child { border-bottom: none; }
+
+.dash-status-pill {
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.85em;
+    color: var(--white);
+}
+
+.pill-taken { background: var(--sage-green); }
+.pill-due { background: var(--warn); }
+.pill-overdue { background: var(--danger); }
+.pill-upcoming { background: var(--purple-main); }
+
+.dash-muted {
+    opacity: 0.6;
+    font-size: 0.9em;
+}
+
+.dash-action-btn {
+    background: var(--purple-main);
+    color: var(--white);
+    border: none;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.dash-action-btn.secondary { background: var(--sage-green); }
+.dash-action-btn.danger { background: var(--danger); }
+.dash-action-btn.gold { background: var(--gold); color: var(--purple-deep); }
+
+.dash-empty-note {
+    background: var(--sage-bg);
+    border-radius: 14px;
+    padding: 14px;
+    font-size: 0.85em;
+    opacity: 0.75;
+}
+
+/* ---- Emergency Alert takeover ---- */
+.emergency-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--bg-cream);
+    z-index: 500;
+    text-align: center;
+    padding: 60px 24px;
+    overflow-y: auto;
+}
+
+.emergency-overlay.active { display: block; }
+
+.emergency-overlay h1 {
+    color: var(--danger);
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.emergency-banner {
+    background: var(--danger);
+    color: white;
+    font-weight: 800;
+    padding: 14px;
+    border-radius: 16px;
+    max-width: 420px;
+    margin: 0 auto 24px;
+    font-size: 1.15em;
+}
+
+.emergency-detail {
+    color: var(--purple-main);
+    font-weight: 600;
+    max-width: 420px;
+    margin: 0 auto 24px;
+}

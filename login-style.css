@@ -1,0 +1,259 @@
+:root {
+    --bg-cream: #FFFDF9;
+    --purple-main: #6D3B97;
+    --purple-light: #F2E9F7;
+    --purple-deep: #4A2A68;
+    --sage-green: #3B5E43;
+    --sage-bg: #EAEFE9;
+    --text-dark: #221A28;
+    --white: #FFFFFF;
+    --gold: #F5C842;
+    --gold-dark: #D9A62A;
+    --danger: #E4574C;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Lexend', sans-serif;
+}
+
+body {
+    background-color: var(--bg-cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+    padding: 24px;
+    position: relative;
+}
+
+/* Top-right hamburger (decorative on welcome/login pages) */
+.top-hamburger {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    font-size: 1.6em;
+    color: var(--text-dark);
+    cursor: pointer;
+    background: none;
+    border: none;
+    z-index: 50;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 20px;
+}
+
+.mascot-logo {
+    width: 110px;
+    height: 110px;
+    margin-bottom: 8px;
+}
+
+.login-title {
+    font-size: 2.6rem;
+    color: var(--purple-main);
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.login-subtitle {
+    font-size: 1.1rem;
+    color: #9A94A0;
+    margin-top: 4px;
+    margin-bottom: 28px;
+    font-weight: 600;
+}
+
+.prompt-text {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--purple-main);
+}
+
+/* ---- Role icon row (Family / Seniors / Caregivers) ---- */
+.role-icon-row {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+}
+
+.role-icon-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text-dark);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+}
+
+.role-icon-badge {
+    width: 100px;
+    height: 100px;
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.6em;
+    box-shadow: 0 6px 16px rgba(109, 59, 151, 0.15);
+    overflow: hidden;
+    position: relative;
+}
+
+.role-icon-badge img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.icon-fallback {
+    display: none; /* shown automatically via onerror if the real image file is missing */
+}
+
+.role-icon-badge.fill-light { background: var(--purple-light); border: 3px solid var(--purple-light); }
+.role-icon-badge.fill-solid { background: var(--purple-main); border: 3px solid var(--purple-main); }
+.role-icon-badge.fill-outline { background: var(--white); border: 3px solid var(--purple-main); }
+
+.role-icon-label {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--purple-main);
+}
+
+/* ---- Emergency SOS widget (welcome screen quick-access) ---- */
+.sos-box {
+    background: var(--gold);
+    border-radius: 22px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    max-width: 420px;
+    margin: 10px auto 0;
+    text-align: left;
+}
+
+.sos-label {
+    font-weight: 800;
+    color: var(--purple-deep);
+    font-size: 1rem;
+}
+
+.sos-hold-btn {
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    background: var(--danger);
+    color: var(--white);
+    border: 4px solid #ffffffaa;
+    font-size: 0.7em;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.1;
+    cursor: pointer;
+    flex-shrink: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    transition: transform 0.1s;
+    position: relative;
+}
+
+.sos-hold-btn.holding {
+    transform: scale(0.92);
+    box-shadow: 0 0 0 8px rgba(228, 87, 76, 0.3);
+}
+
+/* ---- Auth (Sign In / Sign Up) ---- */
+.auth-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    background: var(--purple-light);
+    border-radius: 16px;
+    padding: 6px;
+}
+
+.auth-tab-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95em;
+    color: var(--purple-main);
+    cursor: pointer;
+}
+
+.auth-tab-btn.active {
+    background: var(--white);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.auth-form-group {
+    text-align: left;
+    margin-bottom: 16px;
+}
+
+.auth-form-group label {
+    font-weight: 700;
+    color: var(--purple-main);
+    font-size: 0.95em;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.auth-form-group input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 2px solid var(--purple-main);
+    font-size: 1em;
+    font-family: inherit;
+}
+
+.btn-gold {
+    background-color: var(--gold);
+    color: var(--purple-deep);
+    border: none;
+    padding: 16px 24px;
+    font-size: 1.05em;
+    font-weight: 800;
+    border-radius: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s;
+}
+
+.btn-gold:active { background-color: var(--gold-dark); }
+
+.back-link-plain {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--sage-green);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+#login-error {
+    color: var(--danger);
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: none;
+}

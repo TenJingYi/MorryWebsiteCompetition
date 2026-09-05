@@ -1,0 +1,31 @@
+{
+  "sessions": [
+    {
+      "gameType": "reaction",
+      "date": "2026-08-30",
+      "accuracy": 100,
+      "reactionTimeMs": 584,
+      "durationSec": 2
+    },
+    {
+      "gameType": "number-sequence",
+      "date": "2026-09-04",
+      "accuracy": 0,
+      "reactionTimeMs": 2026,
+      "durationSec": 10
+    },
+    {
+      "gameType": "reaction",
+      "date": "2026-09-04",
+      "accuracy": 100,
+      "reactionTimeMs": 464,
+      "durationSec": 1
+    }
+  ],
+  "streak": {
+    "current": 1,
+    "longest": 1,
+    "lastPlayedDate": "2026-09-04"
+  },
+  "points": 50
+}

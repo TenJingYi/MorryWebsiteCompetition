@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MORY - Caregiver Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard-style.css">
+    <style>
+        /* ── Emergency overlay — shared styles ── */
+        .emergency-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: var(--bg-cream);
+            z-index: 500;
+            overflow-y: auto;
+            /* Red pulsing border to draw the eye even on the edge of vision */
+            animation: em-border-flash 1s ease-in-out infinite;
+        }
+        .emergency-overlay.active { display: block; }
+        @keyframes em-border-flash {
+            0%, 100% { box-shadow: inset 0 0 0 6px #E4574C; }
+            50%       { box-shadow: inset 0 0 0 6px rgba(228,87,76,0.2); }
+        }
+
+        /* ── Caregiver summary card ── */
+        .cg-summary-card {
+            background: var(--white);
+            border: 3px solid var(--lavender-card);
+            border-radius: 24px;
+            padding: 22px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 16px rgba(109,59,151,.08);
+        }
+        .cg-metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,.06);
+        }
+        .cg-metric-row:last-child { border-bottom: none; }
+    </style>
+</head>
+<body>
+    <nav class="dash-topbar">
+        <span class="dash-brand"><img src="mory-mascot.jpg" alt=""> MORY — Caregiver</span>
+        <div style="display:flex;gap:8px;">
+            <a href="/fact-check" style="background:var(--purple-main);color:white;border:none;padding:10px 16px;border-radius:999px;font-weight:800;font-size:0.82em;cursor:pointer;text-decoration:none;">🔍 Fact Checker</a>
+            <button class="dash-logout-btn" onclick="logoutAndRedirect()">Log Out</button>
+        </div>
+    </nav>
+
+    <main class="dash-container" id="dash-main">
+        <div style="text-align:center;padding:40px 0;opacity:.6;">Loading...</div>
+    </main>
+
+    <!--
+        Emergency Alert full-screen takeover.
+        Content is injected by emergency-patch.js — the div starts empty.
+        The .active class makes it visible.
+    -->
+    <div id="emergency-overlay" class="emergency-overlay"></div>
+
+    <script src="auth-script.js"></script>
+    <script src="caregiver-script.js"></script>
+
+    <!-- Tell emergency-patch.js which role this dashboard is for -->
+    <script>window.MORY_ROLE = 'caregiver';</script>
+    <script src="emergency-patch.js"></script>
+</body>
+</html>

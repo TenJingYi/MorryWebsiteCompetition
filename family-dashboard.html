@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MORY - Family Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard-style.css">
+    <style>
+        .summary-card { background:var(--white);border:3px solid var(--lavender-card);border-radius:24px;padding:24px;margin-bottom:16px;box-shadow:0 4px 16px rgba(109,59,151,.08); }
+        .summary-title { background:var(--gold);color:var(--purple-deep);font-weight:900;font-size:1.1em;padding:10px 20px;border-radius:999px;display:inline-block;margin-bottom:16px; }
+        .summary-date-badge { background:var(--gold);color:var(--purple-deep);font-weight:800;padding:6px 16px;border-radius:10px;font-size:.95em; }
+        .metric-row { display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid rgba(0,0,0,.06); }
+        .metric-row:last-child { border-bottom:none; }
+        .metric-circle { width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6em;flex-shrink:0; }
+        .metric-label { font-size:.82em;color:var(--purple-main);font-weight:700;margin-top:2px; }
+        .metric-value { font-size:1.1em;font-weight:800;color:var(--text-dark); }
+        .emergency-overlay { display:none;position:fixed;inset:0;background:var(--bg-cream);z-index:500;overflow-y:auto;animation:em-border-flash 1s ease-in-out infinite; }
+        .emergency-overlay.active { display:block; }
+        @keyframes em-border-flash { 0%,100%{box-shadow:inset 0 0 0 6px #E4574C;} 50%{box-shadow:inset 0 0 0 6px rgba(228,87,76,.2);} }
+    </style>
+</head>
+<body>
+    <nav class="dash-topbar">
+        <span class="dash-brand"><img src="mory-mascot.jpg" alt=""> MORY — Family</span>
+        <div style="display:flex;gap:8px;">
+            <a href="/fact-check" style="background:var(--purple-main);color:white;border:none;padding:10px 16px;border-radius:999px;font-weight:800;font-size:0.82em;cursor:pointer;text-decoration:none;">🔍 Fact Checker</a>
+            <button class="dash-logout-btn" onclick="logoutAndRedirect()">Log Out</button>
+        </div>
+    </nav>
+    <main class="dash-container" id="dash-main">
+        <div style="text-align:center;padding:40px 0;opacity:.6;">Loading...</div>
+    </main>
+    <!-- Emergency overlay — content injected by emergency-patch.js -->
+    <div id="emergency-overlay" class="emergency-overlay"></div>
+    <script src="auth-script.js"></script>
+    <script src="family-script.js"></script>
+    <script>window.MORY_ROLE = 'family';</script>
+    <script src="emergency-patch.js"></script>
+    <script>
+    function escD(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function trendIcon(a){return {Normal:'🟢',Reduced:'🟡',Increased:'🔵','Not mentioned':'⚪'}[a]||'⚪';}
+    function todayLabel(){const d=new Date();return d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();}
+
+    window.loadFamilyDashboard = async function(){
+        const user = await requireAuth('family');
+        if(!user) return;
+        const main = document.getElementById('dash-main');
+        main.innerHTML = '<h2 style="color:var(--purple-main);font-weight:800;margin-bottom:20px;">Good day, '+escD(user.name.split(' ')[0])+'!</h2>';
+
+        const sc = document.createElement('div'); sc.className='summary-card'; sc.id='fam-summary'; sc.innerHTML='<div style="text-align:center;padding:20px;opacity:.6;">Loading summary...</div>'; main.appendChild(sc);
+        const mc = document.createElement('div'); mc.className='dash-card'; mc.id='fam-med'; mc.innerHTML='<h2>💊 Medication Tracker</h2><div class="dash-muted">Loading...</div>'; main.appendChild(mc);
+        const jc = document.createElement('div'); jc.className='dash-card'; jc.id='fam-journal'; jc.innerHTML='<h2>📝 Care Journal</h2><div class="dash-muted">Loading...</div>'; main.appendChild(jc);
+
+        await Promise.all([loadSummary(sc), loadMed(mc), loadJournal(jc)]);
+    };
+
+    async function loadSummary(card){
+        try{
+            const [s,m] = await Promise.all([
+                fetch('/api/dashboard/summary',{credentials:'include'}).then(r=>r.json()),
+                fetch('/api/mood/today',{credentials:'include'}).then(r=>r.json()).catch(()=>null)
+            ]);
+            const chatMin=m?.chatMinutes||0;
+            const chatLabel=chatMin>=60?Math.floor(chatMin/60)+' hr '+(chatMin%60)+' min':chatMin>0?chatMin+' minutes':'No chat today';
+            const moodScore=m?.moodScore;
+            const moodLabel=moodScore!=null?moodScore+'% '+(moodScore>=70?'Positive':moodScore>=40?'Neutral':'Needs attention'):(m?.moodLabel||'Not yet analyzed');
+            const games=s.brainGame?.gamesPlayedToday||0;
+            card.innerHTML=`
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+                <span class="summary-title">Daily Summary</span>
+                <span class="summary-date-badge">${todayLabel()}</span>
+            </div>
+            <div class="metric-row">
+                <div class="metric-circle" style="background:#FFF0F3;border:3px solid #FFB3C1;">🙂</div>
+                <div><div class="metric-value">${escD(moodLabel)}</div><div class="metric-label">Mood</div></div>
+            </div>
+            <div class="metric-row">
+                <div class="metric-circle" style="background:#F5EDFF;border:3px solid #C9A9E9;">💬</div>
+                <div><div class="metric-value">${escD(chatLabel)}</div><div class="metric-label">Chat with MORY</div></div>
+            </div>
+            <div class="metric-row">
+                <div class="metric-circle" style="background:var(--purple-light);border:3px solid var(--purple-main);">🎮</div>
+                <div><div class="metric-value">${games===0?'None today':games+' game'+(games>1?'s':'')+' played'}</div><div class="metric-label">Games · 🔥 ${s.brainGame?.streak?.current||0}-day streak</div></div>
+            </div>
+            <div style="margin-top:12px;font-size:.75em;opacity:.5;text-align:right;">💊 ${s.medication?.completed||0}/${s.medication?.total||0} medications taken today</div>`;
+        }catch(e){card.innerHTML='<div class="dash-muted">Couldn\'t load summary.</div>';}
+    }
+
+    async function loadMed(card){
+        try{
+            const s=await fetch('/api/dashboard/summary',{credentials:'include'}).then(r=>r.json());
+            const SC={taken:'pill-taken',due:'pill-due',overdue:'pill-overdue',upcoming:'pill-upcoming'};
+            const SL={taken:'✅ Taken',due:'⏰ Due Now',overdue:'🔴 Overdue',upcoming:'🕒 Upcoming'};
+            const rows=(s.medication?.items||[]).map(m=>`<div class="dash-row"><div><strong>${escD(m.name)}</strong> — ${escD(m.dosage)}<br><span class="dash-muted">${escD(m.purpose)}</span></div><span class="dash-status-pill ${SC[m.status]}">${SL[m.status]}</span></div>`).join('')||'<div class="dash-muted">No medications on file.</div>';
+            card.innerHTML=`<h2>💊 Medication Tracker</h2>${rows}<div class="dash-empty-note" style="margin-top:10px;">Read-only for Family — caregiver logs doses.</div>`;
+        }catch(e){card.innerHTML='<h2>💊 Medication Tracker</h2><div class="dash-muted">Couldn\'t load.</div>';}
+    }
+
+    async function loadJournal(card){
+        try{
+            const data=await fetch('/api/care-journal',{credentials:'include'}).then(r=>r.json());
+            const entries=data.entries||[];
+            if(!entries.length){card.innerHTML='<h2>📝 Care Journal</h2><div class="dash-empty-note">No entries yet.</div>';return;}
+            const l=entries[0];
+            const trend=entries.slice(0,5).reverse().map(e=>`<div style="text-align:center;flex:1;"><div style="font-size:.72em;opacity:.6;">${e.date.slice(5)}</div><div>${trendIcon(e.appetite)}</div></div>`).join('');
+            card.innerHTML=`<h2>📝 Care Journal</h2><div class="dash-empty-note" style="background:var(--sage-bg);margin-bottom:10px;"><strong>Latest (${escD(l.loggedBy)}):</strong><br>"${escD(l.summarySentence)}"<br><br>🍚 ${escD(l.appetite)} · 😴 ${escD(l.sleepQuality)} · 😊 ${escD(l.mood)} · 🚶 ${escD(l.activityLevel)} · 💧 ${escD(l.hydration)}${l.observationNote?'<br><br>⚠️ '+escD(l.observationNote):''}</div><div class="dash-muted" style="font-weight:700;margin-bottom:6px;">Appetite — last ${Math.min(5,entries.length)} entries</div><div style="display:flex;">${trend}</div>`;
+        }catch(e){if(card)card.innerHTML='<h2>📝 Care Journal</h2><div class="dash-muted">Couldn\'t load.</div>';}
+    }
+
+    document.addEventListener('DOMContentLoaded',function(){
+        loadFamilyDashboard();
+        // Emergency polling is handled by emergency-patch.js
+    });
+    </script>
+</body>
+</html>

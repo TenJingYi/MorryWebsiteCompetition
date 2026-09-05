@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MORY - Sign In</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="login-style.css">
+</head>
+<body>
+    <button class="top-hamburger" aria-label="Menu">☰</button>
+
+    <main class="login-container">
+        <img src="mory-mascot.jpg" alt="MORY" class="mascot-logo">
+        <h1 class="login-title">MORY</h1>
+        <p class="login-subtitle" id="role-subtitle">Welcome to MORY!</p>
+
+        <div class="auth-tabs">
+            <button class="auth-tab-btn active" id="tab-signin" onclick="switchAuthTab('signin')">Sign In</button>
+            <button class="auth-tab-btn" id="tab-signup" onclick="switchAuthTab('signup')">Create Account</button>
+        </div>
+
+        <div id="login-error"></div>
+
+        <!-- SIGN IN -->
+        <form id="login-form">
+            <div class="auth-form-group">
+                <label for="login-username">Username</label>
+                <input id="login-username" type="text" autocomplete="username" required>
+            </div>
+            <div class="auth-form-group">
+                <label for="login-password">Password</label>
+                <input id="login-password" type="password" autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="btn-gold">Sign In</button>
+        </form>
+
+        <!-- SIGN UP -->
+        <form id="signup-form" style="display:none;">
+            <div class="auth-form-group">
+                <label for="signup-name">Name</label>
+                <input id="signup-name" type="text" required>
+            </div>
+            <div class="auth-form-group">
+                <label for="signup-email">Email</label>
+                <input id="signup-email" type="email" required>
+            </div>
+            <div class="auth-form-group">
+                <label for="signup-password">Password</label>
+                <input id="signup-password" type="password" minlength="6" required>
+            </div>
+            <button type="submit" class="btn-gold">Create Account</button>
+        </form>
+
+        <a href="/" class="back-link-plain">⬅️ Back to role selection</a>
+    </main>
+
+    <script src="auth-script.js"></script>
+</body>
+</html>

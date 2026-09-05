@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MORY - Welcome</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="login-style.css">
+    <style>
+        /* About panel (hamburger menu) */
+        #about-panel {
+            display: none;
+            position: fixed;
+            top: 60px;
+            right: 16px;
+            width: 260px;
+            background: var(--white);
+            border: 2px solid var(--purple-main);
+            border-radius: 18px;
+            padding: 18px;
+            z-index: 100;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            font-size: 0.9em;
+            color: var(--text-dark);
+        }
+        #about-panel.open { display: block; }
+        #about-panel h3 { color: var(--purple-main); margin-bottom: 10px; font-size: 1em; }
+        #about-panel p { opacity: 0.75; line-height: 1.5; margin-bottom: 10px; }
+        #about-panel button.close-about {
+            background: var(--purple-main); color: white; border: none;
+            padding: 8px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%;
+        }
+        .top-hamburger.active { color: var(--purple-main); }
+    </style>
+</head>
+<body>
+    <button class="top-hamburger" id="hamburger-btn" aria-label="About MORY" onclick="toggleAboutPanel()">☰</button>
+
+    <!-- About panel (hamburger menu) -->
+    <div id="about-panel">
+        <h3>💜 About MORY</h3>
+        <p>MORY is a caring digital companion for elderly family members — helping with medication reminders, family calls, emergency alerts, and friendly conversation.</p>
+        <p><strong>Seniors</strong> → your personal companion<br>
+           <strong>Family</strong> → monitor and stay connected<br>
+           <strong>Caregivers</strong> → log daily observations</p>
+        <button class="close-about" onclick="toggleAboutPanel()">Close</button>
+    </div>
+
+    <main class="login-container">
+        <img src="mory-mascot.jpg" alt="MORY" class="mascot-logo">
+        <h1 class="login-title">MORY</h1>
+        <p class="login-subtitle">Remember You. Remember Me. Our Memory.</p>
+
+        <p class="prompt-text">Who is using MORY today?</p>
+
+        <div class="role-icon-row">
+            <a href="elderly.html" class="role-icon-btn">
+                <div class="role-icon-badge fill-outline">
+                    <img src="icon-role-senior.png" alt="Seniors" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="icon-fallback">👵</span>
+                </div>
+                <span class="role-icon-label">Seniors</span>
+            </a>
+
+            <a href="/login?role=family" class="role-icon-btn">
+                <div class="role-icon-badge fill-light">
+                    <img src="icon-role-family.png" alt="Family Members" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="icon-fallback">👨‍👩‍👧</span>
+                </div>
+                <span class="role-icon-label">Family<br>Members</span>
+            </a>
+
+            <a href="/login?role=caregiver" class="role-icon-btn">
+                <div class="role-icon-badge fill-solid">
+                    <img src="icon-role-caregiver.png" alt="Caregivers" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="icon-fallback" style="color:white;">🤲</span>
+                </div>
+                <span class="role-icon-label">Caregivers</span>
+            </a>
+        </div>
+
+        <div class="sos-box">
+            <span class="sos-label">Call my<br>emergency contact</span>
+            <button class="sos-hold-btn" id="welcome-sos-btn">Press and hold for 3 seconds</button>
+        </div>
+    </main>
+
+    <!-- Emergency confirmation overlay (senior side) -->
+    <div id="sos-overlay" style="display:none;position:fixed;inset:0;background:var(--bg-cream);z-index:300;text-align:center;padding:60px 24px;">
+        <h1 style="color:var(--danger);font-size:2rem;">🚨 Emergency Alert</h1>
+        <div style="background:var(--danger);color:white;font-weight:800;padding:14px;border-radius:16px;max-width:400px;margin:24px auto;font-size:1.2em;">
+            HELP IS ON THE WAY!
+        </div>
+        <p style="color:var(--purple-main);font-weight:700;font-size:1.2rem;">Your family members have been notified.</p>
+        <button class="btn-gold" style="max-width:320px;margin:40px auto 0;display:block;" onclick="cancelSosAlert()">
+            Tap here to cancel<br>if you accidentally pressed the button
+        </button>
+    </div>
+
+    <script src="auth-script.js"></script>
+    <script>
+        function toggleAboutPanel() {
+            const panel = document.getElementById('about-panel');
+            const btn = document.getElementById('hamburger-btn');
+            panel.classList.toggle('open');
+            btn.classList.toggle('active');
+        }
+        // Close panel when clicking outside
+        document.addEventListener('click', function(e) {
+            const panel = document.getElementById('about-panel');
+            const btn = document.getElementById('hamburger-btn');
+            if (panel.classList.contains('open') && !panel.contains(e.target) && e.target !== btn) {
+                panel.classList.remove('open');
+                btn.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "users": [
+    {
+      "id": "user-family-1",
+      "name": "Ah Mei",
+      "username": "family",
+      "role": "family",
+      "passwordHash": "$2a$10$5mfK0ZQZ5ZT33HZziSV0vOELa.SRvgej7G0BgU.yrL2BgupVdh/u."
+    },
+    {
+      "id": "user-caregiver-1",
+      "name": "Caregiver Nurul",
+      "username": "caregiver",
+      "role": "caregiver",
+      "passwordHash": "$2a$10$UFAA8S7AAVOut2FpXlBMruXIr4vUe4gwGkvwHaVmG5ZBIvNjyXDyW"
+    },
+    {
+      "id": "user-mtk0cjyyzbo7",
+      "name": "Ten Jing Yi",
+      "username": "junjiaten@gmail.com",
+      "role": "family",
+      "passwordHash": "$2a$10$cD.ZFfOu6lmlnze/6lKCSeWv4AtQ2.Un.XD7mnrTzMf/eDvV2Wj16"
+    }
+  ]
+}

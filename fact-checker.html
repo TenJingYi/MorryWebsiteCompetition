@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MORY — Health Fact Checker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:       #FFFDF9;
+            --purple:   #6D3B97;
+            --purple-d: #4A2A68;
+            --purple-l: #F2E9F7;
+            --gold:     #F5C842;
+            --gold-d:   #D9A62A;
+            --green:    #3B5E43;
+            --danger:   #E4574C;
+            --warn:     #C97A1E;
+            --text:     #221A28;
+            --border:   #E8D9EE;
+            --white:    #FFFFFF;
+            --sage:     #EAEFE9;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Lexend', sans-serif; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; }
+
+        /* ── Nav ── */
+        nav {
+            background: var(--bg);
+            border-bottom: 2px solid var(--border);
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .brand { display:flex;align-items:center;gap:10px;font-weight:800;color:var(--purple);font-size:1.1em; }
+        .brand img { width:36px;height:36px;border-radius:8px; }
+        .back-btn {
+            background: var(--gold); color: var(--purple-d); border: none;
+            padding: 8px 18px; border-radius: 999px; font-weight: 800;
+            font-size: 0.85em; cursor: pointer; text-decoration: none;
+        }
+
+        /* ── Layout ── */
+        .page { max-width: 720px; margin: 0 auto; padding: 28px 20px 60px; }
+
+        /* ── Header ── */
+        .page-title {
+            font-size: 1.6em; font-weight: 900; color: var(--purple);
+            margin-bottom: 4px;
+        }
+        .page-subtitle { font-size: 0.88em; opacity: 0.65; margin-bottom: 24px; line-height: 1.5; }
+
+        /* ── Input card ── */
+        .input-card {
+            background: var(--white);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(109,59,151,.06);
+        }
+        .input-label { font-weight: 700; color: var(--purple); font-size: 0.9em; margin-bottom: 8px; display: block; }
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            font-size: 0.95em;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            color: var(--text);
+            background: var(--bg);
+            transition: border-color 0.2s;
+        }
+        textarea:focus { outline: none; border-color: var(--purple); }
+        .char-count { font-size: 0.75em; opacity: 0.5; text-align: right; margin-top: 4px; }
+
+        .examples { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+        .example-chip {
+            background: var(--purple-l); color: var(--purple);
+            border: none; border-radius: 999px;
+            padding: 6px 14px; font-size: 0.78em; font-weight: 700;
+            cursor: pointer; font-family: inherit;
+            transition: background 0.15s;
+        }
+        .example-chip:hover { background: var(--border); }
+
+        .check-btn {
+            width: 100%; background: var(--purple); color: white;
+            border: none; border-radius: 14px; padding: 16px;
+            font-size: 1em; font-weight: 800; cursor: pointer;
+            margin-top: 14px; transition: background 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .check-btn:hover { background: var(--purple-d); }
+        .check-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* ── Result card ── */
+        .result-card {
+            background: var(--white);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(109,59,151,.06);
+            display: none;
+        }
+        .result-card.visible { display: block; }
+
+        /* Verdict banner */
+        .verdict-banner {
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .verdict-icon { font-size: 2.2em; flex-shrink: 0; }
+        .verdict-label { font-size: 1.2em; font-weight: 900; }
+        .verdict-summary { font-size: 0.88em; opacity: 0.85; margin-top: 3px; line-height: 1.4; }
+
+        .verdict-TRUE       { background: #EAF3DE; color: #27500A; }
+        .verdict-PARTIALLY  { background: #FFF3CD; color: #856404; }
+        .verdict-UNCERTAIN  { background: #E6F1FB; color: #0C447C; }
+        .verdict-FALSE      { background: #FCEBEB; color: #501313; }
+
+        /* Truth Score meter */
+        .score-section { margin-bottom: 20px; }
+        .score-header {
+            display: flex; justify-content: space-between;
+            align-items: baseline; margin-bottom: 8px;
+        }
+        .score-label { font-weight: 700; font-size: 0.88em; color: var(--purple); }
+        .score-number { font-size: 2em; font-weight: 900; }
+        .score-bar-track {
+            height: 14px; background: var(--border);
+            border-radius: 999px; overflow: hidden;
+        }
+        .score-bar-fill {
+            height: 100%; border-radius: 999px;
+            transition: width 1s cubic-bezier(.4,0,.2,1);
+        }
+        .score-legend {
+            display: flex; justify-content: space-between;
+            font-size: 0.7em; opacity: 0.5; margin-top: 4px;
+        }
+
+        /* Consensus badge */
+        .consensus-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .badge {
+            font-size: 0.75em; font-weight: 800;
+            padding: 4px 12px; border-radius: 999px;
+        }
+        .badge-green  { background: #C0DD97; color: #27500A; }
+        .badge-amber  { background: #FAC775; color: #633806; }
+        .badge-purple { background: var(--purple-l); color: var(--purple); }
+
+        /* Section headings */
+        .section-title {
+            font-size: 0.82em; font-weight: 800; color: var(--purple);
+            text-transform: uppercase; letter-spacing: 0.05em;
+            margin: 18px 0 8px;
+        }
+
+        /* Reasoning trace */
+        .reasoning-box {
+            background: var(--bg); border: 1.5px solid var(--border);
+            border-radius: 12px; padding: 14px;
+            font-size: 0.87em; line-height: 1.7; color: var(--text);
+            white-space: pre-wrap;
+        }
+
+        /* Caveats */
+        .caveats-box {
+            background: #FFF3CD; border-left: 4px solid var(--warn);
+            border-radius: 0 10px 10px 0; padding: 12px 14px;
+            font-size: 0.86em; line-height: 1.6;
+        }
+
+        /* Recommendation */
+        .rec-box {
+            background: var(--sage); border-radius: 12px;
+            padding: 12px 14px; font-size: 0.86em; line-height: 1.6;
+            font-weight: 600;
+        }
+
+        /* Model cards (side by side) */
+        .model-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+        @media (max-width: 520px) { .model-grid { grid-template-columns: 1fr; } }
+
+        .model-card {
+            background: var(--bg); border: 1.5px solid var(--border);
+            border-radius: 14px; padding: 14px;
+        }
+        .model-card-header { font-weight: 800; font-size: 0.82em; color: var(--purple); margin-bottom: 6px; }
+        .model-score { font-size: 1.4em; font-weight: 900; margin-bottom: 4px; }
+        .model-verdict-pill {
+            display: inline-block; font-size: 0.7em; font-weight: 800;
+            padding: 2px 10px; border-radius: 999px; margin-bottom: 8px;
+        }
+        .gonka-id-box {
+            background: var(--purple-l);
+            border-radius: 8px; padding: 8px 10px;
+            font-size: 0.68em; word-break: break-all;
+            opacity: 0.8; color: var(--purple-d);
+            font-family: monospace;
+        }
+
+        /* Spinner */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner {
+            width: 20px; height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* Error box */
+        .error-box {
+            background: #FCEBEB; border: 2px solid #F09595;
+            border-radius: 14px; padding: 16px;
+            color: #501313; font-weight: 700;
+            display: none;
+        }
+        .error-box.visible { display: block; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="brand">
+        <img src="mory-mascot.jpg" alt="MORY">
+        MORY — Health Fact Checker
+    </div>
+    <a href="javascript:history.back()" class="back-btn">◄ Back</a>
+</nav>
+
+<div class="page">
+
+    <h1 class="page-title">🔍 Health Fact Checker</h1>
+    <p class="page-subtitle">
+        Paste a health claim, medicine information, or news snippet below.
+        MORY uses two independent Gonka AI models to cross-verify it and return a Truth Score.
+    </p>
+
+    <!-- ── Input ── -->
+    <div class="input-card">
+        <label class="input-label" for="claim-input">
+            Enter a claim, health news, or medicine information to verify:
+        </label>
+        <textarea id="claim-input" placeholder="e.g. &#10;• Paracetamol 1000mg can be taken every 4 hours safely&#10;• Drinking hot water cures COVID-19&#10;• Metformin causes vitamin B12 deficiency over time"
+                  oninput="updateCharCount()"></textarea>
+        <div class="char-count" id="char-count">0 characters</div>
+
+        <div class="examples">
+            <span class="example-label" style="font-size:0.78em;opacity:0.6;align-self:center;">Try:</span>
+            <button class="example-chip" onclick="setExample('Paracetamol 500mg can be taken safely every 4 hours for adults')">Paracetamol dosage</button>
+            <button class="example-chip" onclick="setExample('Vitamin C megadoses can cure cancer')">Vitamin C cancer claim</button>
+            <button class="example-chip" onclick="setExample('Metformin causes vitamin B12 deficiency with long-term use')">Metformin B12</button>
+            <button class="example-chip" onclick="setExample('Drinking lemon water every morning detoxifies the liver')">Lemon water detox</button>
+        </div>
+
+        <button class="check-btn" id="check-btn" onclick="runFactCheck()">
+            <span id="btn-label">🔍 Verify with Gonka AI</span>
+            <div class="spinner" id="btn-spinner" style="display:none;"></div>
+        </button>
+    </div>
+
+    <!-- ── Error ── -->
+    <div class="error-box" id="error-box"></div>
+
+    <!-- ── Result ── -->
+    <div class="result-card" id="result-card">
+
+        <!-- Verdict banner -->
+        <div class="verdict-banner" id="verdict-banner">
+            <div class="verdict-icon" id="verdict-icon"></div>
+            <div>
+                <div class="verdict-label" id="verdict-label"></div>
+                <div class="verdict-summary" id="verdict-summary"></div>
+            </div>
+        </div>
+
+        <!-- Truth Score meter -->
+        <div class="score-section">
+            <div class="score-header">
+                <span class="score-label">Truth Score (Gonka Consensus)</span>
+                <span class="score-number" id="score-number">—</span>
+            </div>
+            <div class="score-bar-track">
+                <div class="score-bar-fill" id="score-bar" style="width:0%;background:#888;"></div>
+            </div>
+            <div class="score-legend">
+                <span>0% — False</span>
+                <span>50% — Uncertain</span>
+                <span>100% — True</span>
+            </div>
+        </div>
+
+        <!-- Consensus badge -->
+        <div class="consensus-row" id="consensus-row"></div>
+
+        <!-- Reasoning Trace -->
+        <div class="section-title">📋 Reasoning Trace (Primary Model)</div>
+        <div class="reasoning-box" id="reasoning-box"></div>
+
+        <!-- Caveats -->
+        <div class="section-title">⚠️ Caveats</div>
+        <div class="caveats-box" id="caveats-box"></div>
+
+        <!-- Recommendation -->
+        <div class="section-title">💡 Recommendation</div>
+        <div class="rec-box" id="rec-box"></div>
+
+        <!-- Model-by-model breakdown -->
+        <div class="section-title">🤖 Model Breakdown & Gonka Request IDs</div>
+        <div class="model-grid" id="model-grid"></div>
+
+        <!-- Disclaimer -->
+        <div style="font-size:0.72em;opacity:0.5;margin-top:20px;line-height:1.5;border-top:1px solid var(--border);padding-top:12px;">
+            This fact-check is based on the AI models' training knowledge — not real-time web search.
+            For medical decisions, always consult a qualified healthcare professional.
+            Verified via <strong>Gonka Router</strong> decentralised inference network.
+        </div>
+    </div>
+
+</div>
+
+<script>
+const VERDICTS = {
+    'TRUE':           { icon:'✅', label:'Likely True',         cls:'verdict-TRUE',      bar:'#639922', score_color:'#3B6D11' },
+    'PARTIALLY TRUE': { icon:'⚠️', label:'Partially True',      cls:'verdict-PARTIALLY', bar:'#EF9F27', score_color:'#854F0B' },
+    'UNCERTAIN':      { icon:'❓', label:'Uncertain / Mixed',    cls:'verdict-UNCERTAIN', bar:'#378ADD', score_color:'#185FA5' },
+    'FALSE':          { icon:'❌', label:'Likely False',         cls:'verdict-FALSE',     bar:'#E24B4A', score_color:'#A32D2D' }
+};
+
+function updateCharCount() {
+    const n = document.getElementById('claim-input').value.length;
+    document.getElementById('char-count').textContent = n + ' characters';
+}
+
+function setExample(text) {
+    document.getElementById('claim-input').value = text;
+    updateCharCount();
+}
+
+async function runFactCheck() {
+    const claim = document.getElementById('claim-input').value.trim();
+    if (!claim || claim.length < 10) {
+        showError('Please enter a claim to verify (at least 10 characters).');
+        return;
+    }
+
+    setLoading(true);
+    document.getElementById('result-card').classList.remove('visible');
+    document.getElementById('error-box').classList.remove('visible');
+
+    try {
+        const res = await fetch('/api/fact-check', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ claim })
+        });
+
+        // Handle non-JSON responses (e.g. Render timeout HTML page)
+        const contentType = res.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+            showError('The server took too long to respond. Please try again in a few seconds.');
+            return;
+        }
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            showError(data.error || 'Something went wrong. Please try again.');
+            return;
+        }
+
+        renderResult(data);
+
+    } catch (err) {
+        if (err.name === 'TypeError' && err.message.includes('fetch')) {
+            showError('Could not reach the server. Please check your internet connection.');
+        } else {
+            showError('Error: ' + err.message + ' — Please try again.');
+        }
+    } finally {
+        setLoading(false);
+    }
+}
+
+function renderResult(data) {
+    const v = VERDICTS[data.verdict] || VERDICTS['UNCERTAIN'];
+
+    // Verdict banner
+    const banner = document.getElementById('verdict-banner');
+    banner.className = 'verdict-banner ' + v.cls;
+    document.getElementById('verdict-icon').textContent = v.icon;
+    document.getElementById('verdict-label').textContent = v.label;
+    document.getElementById('verdict-summary').textContent = data.primary?.summary || '';
+
+    // Truth Score
+    document.getElementById('score-number').textContent = data.truthScore + '%';
+    document.getElementById('score-number').style.color = v.score_color;
+    setTimeout(() => {
+        document.getElementById('score-bar').style.width = data.truthScore + '%';
+        document.getElementById('score-bar').style.background = v.bar;
+    }, 100);
+
+    // Consensus badges
+    const badges = [];
+    if (!data.twoModels) {
+        badges.push(`<span class="badge badge-amber">⚠️ Only 1 model responded — not a consensus</span>`);
+    } else if (data.consensus) {
+        badges.push(`<span class="badge badge-green">✓ Both models agree</span>`);
+    } else {
+        badges.push(`<span class="badge badge-amber">⚡ Models differ by ${data.scoreDiff} pts</span>`);
+    }
+    badges.push(`<span class="badge badge-purple">🤖 ${data.twoModels ? '2 models' : '1 model'} used</span>`);
+    badges.push(`<span class="badge badge-purple">📡 Gonka Network</span>`);
+    document.getElementById('consensus-row').innerHTML = badges.join('');
+
+    // Reasoning trace
+    document.getElementById('reasoning-box').textContent = data.primary?.reasoning || '—';
+
+    // Caveats
+    document.getElementById('caveats-box').textContent = data.primary?.caveats || 'None noted.';
+
+    // Recommendation
+    document.getElementById('rec-box').textContent = data.primary?.recommendation || '—';
+
+    // Model cards
+    const cards = [];
+    const models = [data.primary, data.secondary].filter(Boolean);
+    models.forEach((m, i) => {
+        const mv = VERDICTS[m.verdict] || VERDICTS['UNCERTAIN'];
+        const modelShort = (m.model || '—').split('/').pop();
+        cards.push(`
+        <div class="model-card">
+            <div class="model-card-header">${i === 0 ? '① Primary' : '② Secondary'} Model</div>
+            <div class="model-score" style="color:${mv.score_color};">${m.truthScore}%</div>
+            <span class="model-verdict-pill" style="background:${mv.bar}20;color:${mv.score_color};">${mv.icon} ${mv.label}</span>
+            <div style="font-size:0.78em;opacity:0.65;margin-bottom:8px;font-weight:600;">${esc(modelShort)}</div>
+            <div class="gonka-id-box">
+                🔗 Gonka ID:<br>${esc(m.gonkaRequestId || '—')}
+            </div>
+        </div>`);
+    });
+    document.getElementById('model-grid').innerHTML = cards.join('');
+
+    document.getElementById('result-card').classList.add('visible');
+    document.getElementById('result-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function showError(msg) {
+    const box = document.getElementById('error-box');
+    box.textContent = '⚠️ ' + msg;
+    box.classList.add('visible');
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function setLoading(on) {
+    document.getElementById('check-btn').disabled = on;
+    document.getElementById('btn-label').textContent = on ? 'Verifying with Gonka...' : '🔍 Verify with Gonka AI';
+    document.getElementById('btn-spinner').style.display = on ? 'block' : 'none';
+}
+
+// Allow Ctrl+Enter to submit
+document.getElementById('claim-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) runFactCheck();
+});
+</script>
+
+</body>
+</html>
